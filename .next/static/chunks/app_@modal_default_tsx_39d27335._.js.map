@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/danahmaruk/Desktop/projects/07-routing-nextjs/app/%40modal/default.tsx"],"sourcesContent":["\"use client\";\n\nimport React from \"react\";\n\ninterface DefaultModalProps {\n  isOpen?: boolean;\n  onClose?: () => void;\n  children?: React.ReactNode;\n}\n\nexport default function DefaultModal(_: DefaultModalProps) {\n  return null;\n}"],"names":[],"mappings":";;;;AAAA;AAUe,SAAS,aAAa,CAAoB;IACvD,OAAO;AACT;KAFwB","debugId":null}}]
+}

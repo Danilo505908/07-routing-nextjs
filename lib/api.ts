@@ -1,15 +1,21 @@
 import axios, { type AxiosResponse } from "axios";
+import type { Note } from "@/types/note"; // Імпорт замість локального оголошення
 
-// Типи нотатки
-export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping";
+export interface NormalizedNotesResponse {
+  data: Note[];
+  meta: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+    totalPages: number;
+  };
+}
 
-export interface Note {
-  id: string;
-  title: string;
-  content: string;
-  tag: NoteTag;
-  createdAt: string;
-  updatedAt: string;
+export interface FetchNotesParams {
+  page?: number;
+  perPage?: number;
+  search?: string;
+  tag?: string;
 }
 
 const BASE_URL = "https://notehub-public.goit.study/api";
@@ -23,17 +29,6 @@ const api = axios.create({
   },
 });
 
-// Відповідь нормалізована для списку нотаток
-export interface NormalizedNotesResponse {
-  data: Note[];
-  meta: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-    totalPages: number;
-  };
-}
-
 function normalizeFetchResponse(
   resp: AxiosResponse<{
     notes?: Note[];
@@ -43,24 +38,26 @@ function normalizeFetchResponse(
     totalPages?: number;
   }>
 ): NormalizedNotesResponse {
-  const { notes = [], total = notes.length, page = 1, perPage = notes.length, totalPages = 1 } =
-    resp.data;
+  const {
+    notes = [],
+    total = notes.length,
+    page = 1,
+    perPage = notes.length,
+    totalPages = 1,
+  } = resp.data;
+
   return {
     data: notes,
     meta: { totalItems: total, page, perPage, totalPages },
   };
 }
 
-export interface FetchNotesParams {
-  page?: number;
-  perPage?: number;
-  search?: string;
-  tag?: string;
-}
-
 // Отримати список нотаток
-export async function fetchNotes(params: FetchNotesParams = {}): Promise<NormalizedNotesResponse> {
+export async function fetchNotes(
+  params: FetchNotesParams = {}
+): Promise<NormalizedNotesResponse> {
   const { page = 1, perPage = 12, search, tag } = params;
+
   const query: Record<string, string | number> = { page, perPage };
   if (search) query.search = search;
   if (tag) query.tag = tag;
@@ -76,20 +73,22 @@ export async function fetchNotes(params: FetchNotesParams = {}): Promise<Normali
   return normalizeFetchResponse(resp);
 }
 
-// Отримати одну нотатку по id
+// Отримати одну нотатку по ID
 export async function fetchNoteById(id: string): Promise<Note> {
   const { data } = await api.get<Note>(`/notes/${id}`);
   return data;
 }
 
-// Створити нотатку
-export async function createNote(payload: Pick<Note, "title" | "content" | "tag">): Promise<Note> {
-  const resp = await api.post<{ note?: Note; data?: Note }>("/notes", payload);
-  return resp.data.note ?? resp.data.data!;
+// Створити нову нотатку
+export async function createNote(
+  payload: Pick<Note, "title" | "content" | "tag">
+): Promise<Note> {
+  const { data } = await api.post<{ note?: Note; data?: Note }>("/notes", payload);
+  return data.note ?? data.data!;
 }
 
 // Видалити нотатку
 export async function deleteNote(id: string): Promise<Note> {
-  const resp = await api.delete<{ note?: Note; data?: Note }>(`/notes/${id}`);
-  return resp.data.note ?? resp.data.data!;
+  const { data } = await api.delete<{ note?: Note; data?: Note }>(`/notes/${id}`);
+  return data.note ?? data.data!;
 }

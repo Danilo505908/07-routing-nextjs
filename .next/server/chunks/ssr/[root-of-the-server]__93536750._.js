@@ -131,12 +131,12 @@ async function fetchNoteById(id) {
     return data;
 }
 async function createNote(payload) {
-    const resp = await api.post("/notes", payload);
-    return resp.data.note ?? resp.data.data;
+    const { data } = await api.post("/notes", payload);
+    return data.note ?? data.data;
 }
 async function deleteNote(id) {
-    const resp = await api.delete(`/notes/${id}`);
-    return resp.data.note ?? resp.data.data;
+    const { data } = await api.delete(`/notes/${id}`);
+    return data.note ?? data.data;
 }
 }),
 "[project]/components/Modal/Modal.module.css [app-ssr] (css module)", ((__turbopack_context__) => {

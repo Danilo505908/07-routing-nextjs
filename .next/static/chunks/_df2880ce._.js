@@ -68,14 +68,14 @@ async function fetchNoteById(id) {
     return data;
 }
 async function createNote(payload) {
-    const resp = await api.post("/notes", payload);
-    var _resp_data_note;
-    return (_resp_data_note = resp.data.note) !== null && _resp_data_note !== void 0 ? _resp_data_note : resp.data.data;
+    const { data } = await api.post("/notes", payload);
+    var _data_note;
+    return (_data_note = data.note) !== null && _data_note !== void 0 ? _data_note : data.data;
 }
 async function deleteNote(id) {
-    const resp = await api.delete("/notes/".concat(id));
-    var _resp_data_note;
-    return (_resp_data_note = resp.data.note) !== null && _resp_data_note !== void 0 ? _resp_data_note : resp.data.data;
+    const { data } = await api.delete("/notes/".concat(id));
+    var _data_note;
+    return (_data_note = data.note) !== null && _data_note !== void 0 ? _data_note : data.data;
 }
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
